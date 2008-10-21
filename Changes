@@ -1,0 +1,9 @@
+Revision history for Perl extension Google::ProtoBuf.
+
+0.01    Wed Oct  8 22:15:12 2008
+	        - original version; created by h2xs 1.23 with options
+		        -X Google::ProtoBuf
+
+0.05_01 Tue Oct 21 01:06:17 2008
+            - first (alpha) release for CPAN
+    
