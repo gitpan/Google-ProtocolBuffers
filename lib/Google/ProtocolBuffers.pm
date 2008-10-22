@@ -9,7 +9,7 @@ use Data::Dumper;
 use strict;
 use warnings;
 
-our $VERSION = "0.05_1";
+our $VERSION = "0.06";
 
 sub parsefile {
     my $self = shift;
@@ -112,7 +112,7 @@ sub _parse {
         foreach my $f (@fields) {
             my $type = $f->[F_TYPE];
             if ($type !~ /^\d+$/) {
-                ## not a primitive name
+                ## not a primitive type
                 $f->[F_TYPE] = $self->_get_class_name_for($type, $opts);
             }
         }
@@ -492,6 +492,7 @@ Google::ProtocolBuffers - simple interface to Google Protocol Buffers
     ##
     ## Define structure of your data and create serializer classes
     ##
+    use Google::ProtocolBuffers;
     Google::ProtocolBuffers->parse("
         message Person {
           required string name  = 1;
@@ -553,9 +554,9 @@ There are official mappings for C++, Java and Python languages; this library is 
 
 =head1 METHODS
 
-=head2 Google::ProtocolBuffers->parse($proto_text, $options)
+=head2 Google::ProtocolBuffers->parse($proto_text, \%options)
 
-=head2 Google::ProtocolBuffers->parsefile($proto_filename, $options)
+=head2 Google::ProtocolBuffers->parsefile($proto_filename, \%options)
 
 Protocol Buffers is a typed protocol, so work with it starts with some kind
 of Interface Definition Language named 'proto'. 
@@ -578,7 +579,7 @@ included files.
 =item generate_code => $filename or $file_handler
 
 Compilation of proto source is a relatively slow and memory consuming 
-operation, it is not recommended in production enviroment. Instead, 
+operation, it is not recommended in production environment. Instead, 
 with this option you may specify filename or filehandle where to save
 Perl code of created serializer classes for future use. Example:
 
@@ -635,7 +636,7 @@ regular fields in messages or groups:
         "   
             message Foo { 
                 optional int32 id = 1;
-                extend 10 to max;     
+                extensions 10 to max;     
             }
             extend Foo {
                optional string name = 10;
@@ -661,7 +662,7 @@ extended fields in Plain Old Data structures will be enclosed in brackets:
         "   
             message Foo { 
                 optional int32 id = 1;
-                extend 10 to max;     
+                extensions 10 to max;     
             }
             extend Foo {
                optional string id = 10; // <-- id again!
@@ -695,13 +696,13 @@ This method may be called as class or instance method. 'MessageClass' must
 already be created by compiler. Input is a hash reference.
 Output is a scalar (string) with serialized data. 
 Unknown fields in hashref are ignored. 
-In case of errors (e.g. required field is not set and there is no defaul value
+In case of errors (e.g. required field is not set and there is no default value
 for the required field) an exception is thrown. 
 Examples:
 
     use Google::ProtocolBuffers;
     Google::ProtocolBuffers->parse(
-        "message Foo {optional int32 id = 1 }",
+        "message Foo {optional int32 id = 1; }",
         {create_accessors => 1}
     );
     my $string = Foo->encode({ id => 2 });
@@ -719,9 +720,9 @@ a wide-character (utf-8) string, an exception is thrown.
 
 =head2 Enums
 
-For each enum in proto, a Perl class will be constucted with constants for
+For each enum in proto, a Perl class will be constructed with constants for
 each enum value. You may import these constants via 
-ClassName->import(":constants") call. Please note that Perl interpeter 
+ClassName->import(":constants") call. Please note that Perl compiler 
 will know nothing about these constants at compile time, because this import
 occurs at run time, so parenthesis after constant's name are required.
 
@@ -750,10 +751,10 @@ Or, do the import inside a BEGIN block:
 
 Though group are considered deprecated they are supported by Google::ProtocolBuffers.
 They are like nested messages, except that nested type definition and field
-definition go togeter:
+definition go together:
 
-    use Google::ProtBuf;
-    Google::ProtBuf->parse(
+    use Google::ProtocolBuffers;
+    Google::ProtocolBuffers->parse(
         "
             message Foo {
             	optional group Bar = 1 {
@@ -777,7 +778,7 @@ plain old data hash, though.
 
     use Google::ProtocolBuffers;
     Google::ProtocolBuffers->parse(
-        "message Foo {optional string name=1 [default='Kenny']} ",
+        "message Foo {optional string name=1 [default='Kenny'];} ",
         {create_accessors => 1}
     );
     
@@ -794,7 +795,7 @@ plain old data hash, though.
     print $foo->name(), ", ", $foo->{name}, "\n"; # (empty), (empty)  
     
     ## undef value == default value 
-    $foo->name(undef)
+    $foo->name(undef);
     print $foo->name(), ", ", $foo->{name}, "\n"; # Kenny, (undef)   
 
 =head2 Extensions
@@ -808,7 +809,7 @@ From the point of view of named accessors, however, extensions live in
 namespace different from namespace of fields, that's why they simple names
 (i.e. not fully qualified ones) may conflict. 
 (And that's why this option is off by default).
-The name of extensions are obtained from their fully quilified names from 
+The name of extensions are obtained from their fully qualified names from 
 which leading part, most common with the class name to be extended, 
 is stripped. Names of hash keys enclosed in brackets; 
 arguments to methods 'getExtension' and 'setExtension' do not.
@@ -839,7 +840,7 @@ Here is the self-explanatory example to the rules:
             // To compile this example with the official protoc, put lines
             // above to some other file, and import that file here.
             package another_package;
-            // import "other_file.proto";
+            // import 'other_file.proto';
             
             extend some_package.Plugh {
             	optional int32 qux = 12;
@@ -852,8 +853,8 @@ Here is the self-explanatory example to the rules:
     my $plugh = SomePackage::Plugh->decode(
         "\x{08}\x{01}\x{50}\x{02}\x{58}\x{03}\x{60}\x{04}"
     );
-    print Data::Dumper $plugh; 
-    ## {foo=>1, '[bar]'=>2, '[Thud.baz]'=>3, [AnotherPackage.qux]=>4}
+    print Dumper $plugh; 
+    ## {foo=>1, '[bar]'=>2, '[Thud.baz]'=>3, [another_package.qux]=>4}
     
     print $plugh->foo, "\n";                            ## 1
     print $plugh->getExtension('bar'), "\n";            ## 2
@@ -871,18 +872,18 @@ or scope, so the following proto declaration is invalid:
     extend Bar { optional int32 a = 20; }   // <-- Error: name 'a' in package
                                             // 'test' is already used! 
 
-Well, extensions is the most complicated part of proto syntax, and I hope 
+Well, extensions are the most complicated part of proto syntax, and I hope 
 that you either got it or you don't need it.
 
 =head1 RUN-TIME MESSAGE CREATION
 
 You don't like to mess with proto files? 
-Structure of your data is know at run-time only?
+Structure of your data is known at run-time only?
 No problem, create your serializer classes at run-time too with method
 Google::ProtocolBuffers->create_message('ClassName', \@fields, \%options);
 (Note: The order of field description parts is the same as in 
 proto file. The API is going to change to accept named parameters, but
-backward compartibility will be preserved).
+backward compatibility will be preserved).
 
     use Google::ProtocolBuffers;
     use Google::ProtocolBuffers::Constants(qw/:labels :types/);
@@ -903,21 +904,21 @@ backward compartibility will be preserved).
             ## optional      int32        a = 1 [default=12]
             [LABEL_OPTIONAL, TYPE_INT32, 'a', 1, '12']
         ],
-        { create_accessor => 1 }
+        { create_accessors => 1 }
     );
     Google::ProtocolBuffers->create_message(
         'Foo',
         [
-            [LABEL_REQUIRED, TYPE_INT32, 'a',    1],
+            [LABEL_REQUIRED, TYPE_INT32, 'id',   1],
             [LABEL_REPEATED, 'Foo::Bar', 'bars', 2],
         ],
-        { create_accessor => 1 }
+        { create_accessors => 1 }
     );
     my $foo = Foo->new({ id => 10 });
     $foo->bars( Foo::Bar->new({a=>1}), Foo::Bar->new({a=>2}) );
     print $foo->encode;
 
-There are methos create_group and create_enum also; the following constants 
+There are methods 'create_group' and 'create_enum' also; the following constants 
 are exported: labels 
 (LABEL_OPTIONAL, LABEL_OPTIONAL, LABEL_REPEATED) 
 and types
@@ -937,7 +938,7 @@ Ask for what you need most.
 Introspection API is planned.
 
 Declarations of RPC services are currently ignored, but their support
-is planned (btw, which Perl RPC implementaion would you recommend?)
+is planned (btw, which Perl RPC implementation would you recommend?)
 
 =head1 SEE ALSO
 
@@ -947,7 +948,7 @@ Official page of Google's Protocol Buffers project
 Protobuf-PerlXS project (L<http://code.google.com/p/protobuf-perlxs/>) - 
 creates XS wrapper for C++ classes generated by official Google's
 compiler protoc. You have to complile XS files every time you've
-changed the proto description, howver, this is the fastest way to work 
+changed the proto description, however, this is the fastest way to work 
 with Protocol Buffers from Perl.
 
 Protobuf-Perl project L<http://code.google.com/p/protobuf-perl/> - 
