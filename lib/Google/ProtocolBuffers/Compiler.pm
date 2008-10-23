@@ -19,7 +19,7 @@ my $grammar = <<'END_OF_GRAMMAR';
 proto       :   <skip: qr!  (?: //.*\n | \s+ )*  !x>
                 ## list of top level declarations. 
                 ## Skip empty declarations and ";".
-                (message | extend | enum | import | package | option | service | ";")(s) /\Z/
+                (message | extend | enum | import | package | option | service | syntax | ";")(s) /\Z/
                 { $return = [ grep {ref $_} @{$item[2]} ]; }
             |   <error>
 
@@ -61,15 +61,19 @@ service     :   ## services are ignored
                 { $return = '' }
             |   <error?> <reject>
             
-rpc         :   "rpc" <commit> ident "(" userType ")" "returns" "(" userType ")" ";"
+rpc         :   "rpc" <commit> ident "(" userType ")" "returns" "(" userType ")" rpcOptions(?) ";"
                 { $return = '' }
             |   <error?> <reject>
 
+rpcOptions  :   "{" option(s?) "}"
+
 messageBody :   "{" <commit> ( field | enum | message | extend | extensions | group | option | ";" )(s?) "}"
                 { $return = [ grep {ref $_} @{$item[3]} ] }
+            |   <error?> <reject>
 
 group       :   label "group" <commit> ident "=" intLit messageBody
                 { $return = [group => $item{label}, $item{ident}, $item{intLit}, $item{messageBody} ] }
+            |   <error?> <reject>
 
 field       :   label type ident "=" intLit fOptList(?) ";"
                 { $return = [field => $item{label}, $item{type}, $item{ident}, $item{intLit}, $item[6][0] ] }
@@ -81,6 +85,7 @@ fieldOption :   "default" <commit> "=" constant
                 { $return =  $item{constant} }
             |   optionBody 
                 { $return = '' }
+            |   <error?> <reject>
             
 extensions  :   "extensions" <commit> extension(s /,/) ";"
                 { $return = '' }
@@ -141,8 +146,8 @@ regularChar :   ## all chars exept chr(0) and "\n"
 hexEscape   :   /\\[Xx]/ /[A-Fa-f0-9]{1,2}/
                 { $return = chr(hex($item[2])) }
 
-octEscape   :   '\\' /^[0-2][0-7]{0,2}/
-                { $return = chr(oct($item[2])) }
+octEscape   :   '\\' /^0?[0-7]{1,3}/
+                { $return = chr(oct("0$item[2]") & 0xFF); }
 
 charEscape  :   /\\[abfnrtv\\'"]/
                 { 
@@ -155,6 +160,13 @@ charEscape  :   /\\[abfnrtv\\'"]/
                                 ($s eq 't') ? "\t" :
                                 ($s eq 'v') ? "\x0b" : $s;
                 }
+
+                                 
+syntax      :   "syntax" "=" strLit ## syntax = "proto2";
+                { 
+                    die "Unknown syntax" unless $item{strLit} eq 'proto2';
+                    $return = ''; 
+                }                 
 
 END_OF_GRAMMAR
 

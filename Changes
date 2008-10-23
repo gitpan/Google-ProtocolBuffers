@@ -9,4 +9,12 @@ Revision history for Perl extension Google::ProtoBuf.
     
 0.06    Wed Oct 22 00:12:58     2008
             - Typos in documentation were fixed, public CPAN release
+            
+0.08    Thu Oct 23 21:45:03 MSD 2008
+            - Fixed encoding/decoding of float types on big-endian machines
+            - Fixed default strings values with characters > 127
+            - Added dependencies on Perl v5.6.0 (for 'our'), 
+                'constant' v1.06 (for multiple constants declaration) and
+                'Test::More' v0.52 (for correct require_ok() in tests) 
+            
 

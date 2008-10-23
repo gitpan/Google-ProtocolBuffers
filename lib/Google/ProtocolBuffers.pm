@@ -9,7 +9,7 @@ use Data::Dumper;
 use strict;
 use warnings;
 
-our $VERSION = "0.06";
+our $VERSION = "0.08";
 
 sub parsefile {
     my $self = shift;
@@ -774,7 +774,8 @@ definition go together:
 Proto file may specify a default value for a field. 
 The default value is returned by accessor if there is no value for field
 or if this value is undefined. The default value is not accessible via 
-plain old data hash, though.
+plain old data hash, though. Default string values are always byte-strings,
+if you need wide-character (Unicode) string, use L<Encode/decode_utf8>.
 
     use Google::ProtocolBuffers;
     Google::ProtocolBuffers->parse(
@@ -930,7 +931,6 @@ TYPE_BOOL, TYPE_STRING, TYPE_BYTES, TYPE_DOUBLE, TYPE_FLOAT).
 
 All proto options are ignored except default values for fields; 
 extension numbers are not checked. 
-Default values of UTF-8 strings don't work currently. 
 Unknown fields in serialized data are skipped, 
 no stream API (encoding to/decoding from file handlers) is present. 
 Ask for what you need most.

@@ -8,6 +8,7 @@ lib/Google/ProtocolBuffers/Compiler.pm
 lib/Google/ProtocolBuffers/Constants.pm
 Makefile.PL
 MANIFEST			This list of files
+META.yml
 README
 t/01-load.t
 t/02-compiler.t

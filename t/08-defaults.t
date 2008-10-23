@@ -135,11 +135,9 @@ is($data->small_int32, -0x7FFFFFFF);
 ##  optional  int64 small_int64  = 5 [default = -0x7FFFFFFFFFFFFFFF];
 is($data->small_int64, Math::BigInt->new("-0x7FFFFFFFFFFFFFFF"));
 
-{
-	local $TODO = "Oops, utf8 strings doesn't work in default values";
-    ##  optional string utf8_string = 6 [default = "\341\210\264"];
-    is($data->utf8_string, "\341\210\264");
-}
+##  optional string utf8_string = 6 [default = "\341\210\264"];
+is($data->utf8_string, "\341\210\264");
+
 __END__
 
 }

@@ -33,6 +33,26 @@ BEGIN {
     }
 }
 
+BEGIN {
+    ## Floats and doubles are packed in their native format,
+    ## which is different on big-endian and litte-endian platforms
+    ## Maybe create and load one of two files, like CodecIV* above?
+    my $bo = $Config{byteorder}; 
+    if ($bo =~ '^1234') {
+    	## little-endian platform
+        *encode_float  = \&encode_float_le; 
+        *decode_float  = \&decode_float_le; 
+        *encode_double = \&encode_double_le; 
+        *decode_double = \&decode_double_le; 
+    } elsif ($bo =~ '4321$') {
+    	## big-endian
+        *encode_float  = \&encode_float_be; 
+        *decode_float  = \&decode_float_be; 
+        *encode_double = \&encode_double_be; 
+        *decode_double = \&decode_double_be; 
+    }	
+}
+
 my @primitive_type_encoders;
 $primitive_type_encoders[TYPE_DOUBLE]   = \&encode_double;
 $primitive_type_encoders[TYPE_FLOAT]    = \&encode_float;
@@ -490,12 +510,24 @@ sub decode_bool {
 ##
 ## type: double
 ##
-sub encode_double {
+## little-endian versions
+sub encode_double_le {
     $_[0] .= pack('d', $_[1]);
 }
-sub decode_double {
+sub decode_double_le {
     die BROKEN_MESSAGE() if $_[1]+8 > length($_[0]); 
     my $v = unpack('d', substr($_[0], $_[1], 8));
+    $_[1] += 8;
+    return $v;
+}
+
+## big-endian versions
+sub encode_double_be {
+    $_[0] .= reverse pack('d', $_[1]);
+}
+sub decode_double_be {
+    die BROKEN_MESSAGE() if $_[1]+8 > length($_[0]); 
+    my $v = unpack('d', reverse substr($_[0], $_[1], 8));
     $_[1] += 8;
     return $v;
 }
@@ -554,12 +586,22 @@ sub decode_sfixed32 {
 ##
 ## type: float
 ##
-sub encode_float {
+sub encode_float_le {
     $_[0] .= pack('f', $_[1]);
 }
-sub decode_float {
+sub decode_float_le {
     die BROKEN_MESSAGE() if $_[1]+4 > length($_[0]); 
     my $v = unpack('f', substr($_[0], $_[1], 4));
+    $_[1] += 4; 
+    return $v;
+}
+
+sub encode_float_be {
+    $_[0] .= reverse pack('f', $_[1]);
+}
+sub decode_float_be {
+    die BROKEN_MESSAGE() if $_[1]+4 > length($_[0]); 
+    my $v = unpack('f', reverse substr($_[0], $_[1], 4));
     $_[1] += 4; 
     return $v;
 }

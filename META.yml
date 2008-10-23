@@ -1,0 +1,26 @@
+--- #YAML:1.0
+name: Google-ProtocolBuffers
+abstract: simple interface to Google Protocol Buffers
+version: 0.08
+author:
+  - Igor Gariev <gariev@hotmail.com>
+license: perl
+distribution_type: module
+requires:
+  Parse::RecDescent: 1.94
+  Math::BigInt: 0
+  Class::Accessor: 0
+  constant: 1.04
+  Config: 0
+  Data::Dumper: 0
+  File::Spec: 0
+  Carp: 0
+build_requires:
+  Test: 0
+  Test::More: 0.52
+urls:
+  license: http://dev.perl.org/licenses/
+meta-spec:
+  version: 1.3
+  url: http://module-build.sourceforge.net/META-spec-v1.3.html
+generated_by: manually
