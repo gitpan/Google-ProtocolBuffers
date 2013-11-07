@@ -128,7 +128,7 @@ octInt      :   /[-+]?0[0-7]*/
 
 floatLit    :   ## Make floatLit do not match integer literals,
                 ## so that it doesn't take off '0' from '0xFFF' or '012' (oct).
-                /[-+]?\d+\.\d+?([Ee][\+-]?\d+)?/
+                /[-+]?\d*\.\d+([Ee][\+-]?\d+)?/
             |   /[-+]?\d+[Ee][\+-]?\d+/
             
 
@@ -381,11 +381,13 @@ sub _find_filename {
     my $filename = $path;
     return $filename if -e $filename;
 
-    if ($self->{opts}->{include_dir}) {
-        $filename = File::Spec->catfile($self->{opts}->{include_dir}, $path);
-        return $filename if -e $filename;
+    if (my $inc_dirs = $self->{opts}->{include_dir}) {
+        $inc_dirs = [ $inc_dirs ] unless(ref($inc_dirs) eq 'ARRAY');
+        foreach my $d (@$inc_dirs){
+            $filename = File::Spec->catfile($d, $path);
+            return $filename if -e $filename;
+        }
     }
-
     die "Can't find proto file: '$path'";
 }
 

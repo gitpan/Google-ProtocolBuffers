@@ -34,7 +34,7 @@ my %labels = reverse (
 sub _get_perl_literal {
     my $v = shift;
     my $opts = shift;
-    
+   
     if ($v =~ /^-?\d+$/) {
         ## integer literal
         if ($v>0x7fff_ffff || $v<-0x8000_0000) {
@@ -42,8 +42,7 @@ sub _get_perl_literal {
         } else {
             return "$v";
         }
-        
-    } elsif ($v =~ /^-?\d+(\.\d+)?([Ee][\+-]?\d+)?$/i) {
+     } elsif ($v =~ /[-+]?\d*\.\d+([Ee][\+-]?\d+)?|[-+]?\d+[Ee][\+-]?\d+/i) {        
         ## floating point literal
         return "$v";
     } else {
