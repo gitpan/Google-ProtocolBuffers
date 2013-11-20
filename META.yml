@@ -5,9 +5,9 @@ author:
   - 'Igor Gariev <gariev@hotmail.com>'
   - 'the CISRT Gadgets Foundation <csirtgadgets.org>'
 build_requires:
-  ExtUtils::MakeMaker: 6.36
+  ExtUtils::MakeMaker: 6.59
 configure_requires:
-  ExtUtils::MakeMaker: 6.36
+  ExtUtils::MakeMaker: 6.59
 distribution_type: module
 dynamic_config: 1
 generated_by: 'Module::Install version 1.06'
@@ -27,9 +27,10 @@ requires:
   Parse::RecDescent: 1.94
   Test::More: 0.52
   constant: 0
+  perl: 5.8.8
 resources:
   bugtracker: https://github.com/csirtgadgets/google-protocolbuffers-perl/issues
   homepage: https://github.com/csirtgadgets/google-protocolbuffers-perl
   license: http://dev.perl.org/licenses/
   repository: https://github.com/csirtgadgets/google-protocolbuffers-perl.git
-version: 5.05
+version: 0.10

@@ -23,8 +23,7 @@
 #     NO_META => q[1]
 #     PREREQ_PM => { Test::More=>q[0.52], Math::BigInt=>q[0], ExtUtils::MakeMaker=>q[6.59], Class::Accessor=>q[0], constant=>q[0], Config=>q[0], Parse::RecDescent=>q[1.94] }
 #     TEST_REQUIRES => {  }
-#     VERSION => q[0.10]
-#     VERSION_FROM => q[lib/Google/ProtocolBuffers.pm]
+#     VERSION => q[5.08]
 #     dist => { PREOP=>q[$(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"] }
 #     realclean => { FILES=>q[MYMETA.yml] }
 
@@ -65,11 +64,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = Google::ProtocolBuffers
 NAME_SYM = Google_ProtocolBuffers
-VERSION = 0.10
+VERSION = 5.08
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_10
+VERSION_SYM = 5_08
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.10
+XS_VERSION = 5.08
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -157,7 +156,7 @@ FULLEXT = Google/ProtocolBuffers
 BASEEXT = ProtocolBuffers
 PARENT_NAME = Google
 DLBASE = $(BASEEXT)
-VERSION_FROM = lib/Google/ProtocolBuffers.pm
+VERSION_FROM = 
 OBJECT = 
 LDFROM = $(OBJECT)
 LINKTYPE = dynamic
@@ -282,7 +281,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = Google-ProtocolBuffers
-DISTVNAME = Google-ProtocolBuffers-0.10
+DISTVNAME = Google-ProtocolBuffers-5.08
 
 
 # --- MakeMaker macro section:
