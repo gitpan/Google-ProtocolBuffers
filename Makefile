@@ -23,7 +23,7 @@
 #     NO_META => q[1]
 #     PREREQ_PM => { Test::More=>q[0.52], Math::BigInt=>q[0], ExtUtils::MakeMaker=>q[6.59], Class::Accessor=>q[0], constant=>q[0], Config=>q[0], Parse::RecDescent=>q[1.94] }
 #     TEST_REQUIRES => {  }
-#     VERSION => q[0.10]
+#     VERSION => q[0.11]
 #     VERSION_FROM => q[lib/Google/ProtocolBuffers.pm]
 #     dist => { PREOP=>q[$(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"] }
 #     realclean => { FILES=>q[MYMETA.yml] }
@@ -42,15 +42,15 @@ CCDLFLAGS =
 DLEXT = bundle
 DLSRC = dl_dlopen.xs
 EXE_EXT = 
-FULL_AR = /usr/bin/ar
-LD = env MACOSX_DEPLOYMENT_TARGET=10.8 /usr/bin/clang
-LDDLFLAGS = -L/opt/local/lib  -bundle -undefined dynamic_lookup -fstack-protector
-LDFLAGS = -L/opt/local/lib  -fstack-protector
+FULL_AR = /opt/local/bin/ar
+LD = env MACOSX_DEPLOYMENT_TARGET=10.3 /usr/bin/clang
+LDDLFLAGS = -L/opt/local/lib -Wl,-headerpad_max_install_names  -bundle -undefined dynamic_lookup -fstack-protector
+LDFLAGS = -L/opt/local/lib -Wl,-headerpad_max_install_names  -fstack-protector
 LIBC = 
 LIB_EXT = .a
 OBJ_EXT = .o
 OSNAME = darwin
-OSVERS = 12.3.0
+OSVERS = 13.0.0
 RANLIB = ranlib
 SITELIBEXP = /opt/local/lib/perl5/site_perl/5.12.4
 SITEARCHEXP = /opt/local/lib/perl5/site_perl/5.12.4/darwin-thread-multi-2level
@@ -65,11 +65,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = Google::ProtocolBuffers
 NAME_SYM = Google_ProtocolBuffers
-VERSION = 0.10
+VERSION = 0.11
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_10
+VERSION_SYM = 0_11
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.10
+XS_VERSION = 0.11
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -191,7 +191,9 @@ PERL_ARCHIVE       =
 PERL_ARCHIVE_AFTER = 
 
 
-TO_INST_PM = lib/Google/ProtocolBuffers.pm \
+TO_INST_PM = lib/.DS_Store \
+	lib/Google/.DS_Store \
+	lib/Google/ProtocolBuffers.pm \
 	lib/Google/ProtocolBuffers/CodeGen.pm \
 	lib/Google/ProtocolBuffers/Codec.pm \
 	lib/Google/ProtocolBuffers/CodecIV32.pm \
@@ -199,7 +201,11 @@ TO_INST_PM = lib/Google/ProtocolBuffers.pm \
 	lib/Google/ProtocolBuffers/Compiler.pm \
 	lib/Google/ProtocolBuffers/Constants.pm
 
-PM_TO_BLIB = lib/Google/ProtocolBuffers.pm \
+PM_TO_BLIB = lib/.DS_Store \
+	blib/lib/.DS_Store \
+	lib/Google/.DS_Store \
+	blib/lib/Google/.DS_Store \
+	lib/Google/ProtocolBuffers.pm \
 	blib/lib/Google/ProtocolBuffers.pm \
 	lib/Google/ProtocolBuffers/CodeGen.pm \
 	blib/lib/Google/ProtocolBuffers/CodeGen.pm \
@@ -282,7 +288,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = Google-ProtocolBuffers
-DISTVNAME = Google-ProtocolBuffers-0.10
+DISTVNAME = Google-ProtocolBuffers-0.11
 
 
 # --- MakeMaker macro section:
@@ -838,6 +844,8 @@ ppd :
 
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
+	  lib/.DS_Store blib/lib/.DS_Store \
+	  lib/Google/.DS_Store blib/lib/Google/.DS_Store \
 	  lib/Google/ProtocolBuffers.pm blib/lib/Google/ProtocolBuffers.pm \
 	  lib/Google/ProtocolBuffers/CodeGen.pm blib/lib/Google/ProtocolBuffers/CodeGen.pm \
 	  lib/Google/ProtocolBuffers/Codec.pm blib/lib/Google/ProtocolBuffers/Codec.pm \

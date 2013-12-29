@@ -33,4 +33,4 @@ resources:
   homepage: https://github.com/csirtgadgets/google-protocolbuffers-perl
   license: http://dev.perl.org/licenses/
   repository: https://github.com/csirtgadgets/google-protocolbuffers-perl.git
-version: 0.10
+version: 0.11

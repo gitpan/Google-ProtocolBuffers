@@ -1,12 +1,10 @@
 {
-   "abstract" : "simple interface to Google Protocol Buffers\r",
+   "abstract" : "simple interface to Google Protocol Buffers",
    "author" : [
-      ", ACKNOWLEDGEMENS, COPYRIGHT\r",
-      "Igor Gariev <gariev@hotmail.com>",
-      "the CISRT Gadgets Foundation <csirtgadgets.org>"
+      ", ACKNOWLEDGEMENS, COPYRIGHT\r, Igor Gariev <gariev@hotmail.com>, the CISRT Gadgets Foundation <csirtgadgets.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.06, CPAN::Meta::Converter version 2.132830",
+   "generated_by" : "ExtUtils::MakeMaker version 6.8, CPAN::Meta::Converter version 2.132830",
    "license" : [
       "perl_5"
    ],
@@ -17,8 +15,8 @@
    "name" : "Google-ProtocolBuffers",
    "no_index" : {
       "directory" : [
-         "inc",
-         "t"
+         "t",
+         "inc"
       ]
    },
    "prereqs" : {
@@ -29,7 +27,7 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.59"
+            "ExtUtils::MakeMaker" : "0"
          }
       },
       "runtime" : {
@@ -45,17 +43,5 @@
       }
    },
    "release_status" : "stable",
-   "resources" : {
-      "bugtracker" : {
-         "web" : "https://github.com/csirtgadgets/google-protocolbuffers-perl/issues"
-      },
-      "homepage" : "https://github.com/csirtgadgets/google-protocolbuffers-perl",
-      "license" : [
-         "http://dev.perl.org/licenses/"
-      ],
-      "repository" : {
-         "url" : "https://github.com/csirtgadgets/google-protocolbuffers-perl.git"
-      }
-   },
-   "version" : "5.08"
+   "version" : "0.11"
 }

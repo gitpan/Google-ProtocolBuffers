@@ -1,15 +1,13 @@
 ---
-abstract: "simple interface to Google Protocol Buffers\r"
+abstract: 'simple interface to Google Protocol Buffers'
 author:
-  - ", ACKNOWLEDGEMENS, COPYRIGHT\r"
-  - 'Igor Gariev <gariev@hotmail.com>'
-  - 'the CISRT Gadgets Foundation <csirtgadgets.org>'
+  - ", ACKNOWLEDGEMENS, COPYRIGHT\r, Igor Gariev <gariev@hotmail.com>, the CISRT Gadgets Foundation <csirtgadgets.org>"
 build_requires:
   ExtUtils::MakeMaker: 6.59
 configure_requires:
-  ExtUtils::MakeMaker: 6.59
+  ExtUtils::MakeMaker: 0
 dynamic_config: 0
-generated_by: 'Module::Install version 1.06, CPAN::Meta::Converter version 2.132830'
+generated_by: 'ExtUtils::MakeMaker version 6.8, CPAN::Meta::Converter version 2.132830'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -17,8 +15,8 @@ meta-spec:
 name: Google-ProtocolBuffers
 no_index:
   directory:
-    - inc
     - t
+    - inc
 requires:
   Class::Accessor: 0
   Config: 0
@@ -27,9 +25,4 @@ requires:
   Test::More: 0.52
   constant: 0
   perl: 5.008008
-resources:
-  bugtracker: https://github.com/csirtgadgets/google-protocolbuffers-perl/issues
-  homepage: https://github.com/csirtgadgets/google-protocolbuffers-perl
-  license: http://dev.perl.org/licenses/
-  repository: https://github.com/csirtgadgets/google-protocolbuffers-perl.git
-version: 5.08
+version: 0.11
